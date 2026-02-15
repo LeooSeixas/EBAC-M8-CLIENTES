@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cadastro de clientes</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js" defer></script>
+    </head>
+    <body>
+        <main>
+            <section class="interface">
+                <h3>Cadastrar novo cliente</h3>
+                <form class="register">
+                    <label for="name">Nome:</label>
+                    <input type="text" id="name" placeholder="Nome Sobrenome" required>
+
+                    <label for="cpf">CPF:</label>
+                    <input type="text" pattern="\d*"  inputmode="numeric" id="cpf" placeholder="Ex.: 12345678900" maxlength="11"  required>
+
+                    <label for="email">E-mail:</label>
+                    <input type="text" inputmode="email" id="email" placeholder="novousuario@gmail.com" required>
+
+                    <div class="controls">
+                        <button type="button" id="send" class="btn">Cadastrar</button>
+                        <button type="button" id="clear" class="btn">Limpar</button>
+                    </div>
+                </form>
+            </section>
+            <section class="interface">
+                <h3>Lista de clientes:</h3>
+                <div class="userList">
+                    <ul class="list" id="list"></ul>
+                        <p id="empty" class="empty">Nenhum cliente encontrado</p>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>
