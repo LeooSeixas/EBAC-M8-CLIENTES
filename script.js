@@ -1,11 +1,11 @@
 // VARIAVEIS
 const getElement = (id) => document.getElementById(id);
 const registerName = getElement("name");
-const regiterCpf = getElement('cpf');
+const registerCpf = getElement('cpf');
 const registerEmail = getElement('email');
-const users = getElement('list')
+const userList = getElement('list')
 const empty = getElement('empty');
-const url = "https://crudcrud.com/api/e7ef338e47374ad4923f7b4546991333/clientes"
+const url = "https://crudcrud.com/api/142cb5e454224b388464f75f57db672c/clientes"
 
 //MENSAGEM DE LISTA VAZIA
 function toggleEmpty(){
@@ -21,23 +21,30 @@ function addToDOM(user) {
     const item = document.createElement('li');
     item.innerHTML = `
         <span>${user.userName}, ${user.cpf}, ${user.email}</span>
-        <button class="btn" onclick="remove('${user._id}')">X</button>
-        ;`
+        <button class="btn" onclick="remove('${user._id}', this)">X</button>
+        `;
     userList.appendChild(item);
 }
 
 // REMOVER CLIENTE
-function remove(id) {
+function remove(id, elementButton) {
+    if(!confirm("Deseja realmente excluir o item?")) return;
+
     fetch(`${url}/${id}`, {method: 'DELETE',})
     .then(response => {
         if(response.ok){
             alert("Removido com sucesso")
+            if(elementButton){
+                elementButton.parentElement.remove();
+            } else {
+                location.reload();
+                return;
+            }
             toggleEmpty();
             console.log(`Registro com id: ${id} foi removido com sucesso`);
-            location.reload();
         } else {
-            console.error('Falha ao deletar o reistro', response.status);
-            alert('Error ao deleter no servidor')
+            console.error('Falha ao deletar o registro', response.status);
+            alert('Error ao deletar no servidor')
         }
     })
     .catch(error => console.error('Error:', error));
@@ -45,19 +52,19 @@ function remove(id) {
 
 // MOSTRAR LISTA DE CLIENTES
 fetch(url)
-.then(response => response.json())
-.then((listUser) => {
-    listUser.forEach(user => {
-        addToDOM(user);
-    });
-    toggleEmpty();
-})
-.catch(error => console.error('Error:', error));
+    .then(response => response.json())
+    .then((listUser) => {
+        listUser.forEach(user => {
+            addToDOM(user);
+        });
+        toggleEmpty();
+    })
+    .catch(error => console.error('Error:', error));
 
 // ADICIONAR NOVOS CLIENTES
 getElement("send").addEventListener('click', ()=>{
     const sendName = registerName.value;
-    const sendCPF = regiterCpf.value;
+    const sendCPF = registerCpf.value;
     const sendEmail = registerEmail.value;
 
     if(!sendName || !sendEmail){
@@ -76,7 +83,7 @@ getElement("send").addEventListener('click', ()=>{
     })
     .then(response => {
         if(!response.ok){
-            throw new error("ERRO AO CADASTRAR")
+            throw new Error("ERRO AO CADASTRAR")
         } else {
             console.log('Status:', response.status);
             return response.json()
@@ -88,7 +95,7 @@ getElement("send").addEventListener('click', ()=>{
         toggleEmpty();
 
         registerName.value = '';
-        regiterCpf.value = '';
+        registerCpf.value = '';
         registerEmail.value = '';
     })
     .catch(error => console.error('Error:', error));
@@ -97,7 +104,7 @@ getElement("send").addEventListener('click', ()=>{
 // BOTÃO DE LIMPAR FORM
 getElement('clear').addEventListener('click', () =>{
     registerName.value = '';
-    regiterCpf.value = '';
+    registerCpf.value = '';
     registerEmail.value = '';                
 })
 
